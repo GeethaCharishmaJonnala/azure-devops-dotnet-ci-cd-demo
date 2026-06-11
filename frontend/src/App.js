@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import api from "./api";
 
 function App() {
+  const [deployment, setDeployment] = useState(null);
+
+  useEffect(() => {
+    api.get("/deployment")
+      .then(res => setDeployment(res.data))
+      .catch(err => console.log(err));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ padding: "40px" }}>
+      <h1>Azure DevOps CI/CD Dashboard</h1>
+
+      {deployment && (
+        <div>
+          <h3>{deployment.applicationName}</h3>
+          <p>Environment: {deployment.environment}</p>
+          <p>Version: {deployment.version}</p>
+        </div>
+      )}
     </div>
   );
 }
